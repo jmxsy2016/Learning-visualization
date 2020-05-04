@@ -3,12 +3,12 @@
 ## R语言
 
 - [ggplot2学习笔记之简短教程](https://rpubs.com/lijunjie_ggplot2/576373)
-- [完整的ggplot2教程-第1部分| ggplot2简介](https://rpubs.com/lijunjie_ggplot2/ggplot2_introduction)
-- [完整的ggplot2教程-第2部分(1)| ggthemes简介](https://rpubs.com/lijunjie_ggplot2/ggthemes)
-- [完整的ggplot2教程-第2部分(2)|如何自定义ggplot2](https://rpubs.com/lijunjie_ggplot2/576473)
-- [完整的ggplot2教程-第3部分(1)|相关性](https://rpubs.com/lijunjie_ggplot2/576897)
-- [完整的ggplot2教程-第3部分(2)|偏差图](https://rpubs.com/lijunjie_ggplot2/576957)
-- [完整的ggplot2教程-第3部分(3)排行和分布图](https://rpubs.com/lijunjie_ggplot2/577314)
+- [完整的ggplot2教程-第1部分——ggplot2简介](https://rpubs.com/lijunjie_ggplot2/ggplot2_introduction)
+- [完整的ggplot2教程-第2部分(1)——ggthemes简介](https://rpubs.com/lijunjie_ggplot2/ggthemes)
+- [完整的ggplot2教程-第2部分(2)——如何自定义ggplot2](https://rpubs.com/lijunjie_ggplot2/576473)
+- [完整的ggplot2教程-第3部分(1)——相关性](https://rpubs.com/lijunjie_ggplot2/576897)
+- [完整的ggplot2教程-第3部分(2)——偏差图](https://rpubs.com/lijunjie_ggplot2/576957)
+- [完整的ggplot2教程-第3部分(3)——排行和分布图](https://rpubs.com/lijunjie_ggplot2/577314)
 - [ggplot2 Quick_Reference](https://rpubs.com/lijunjie_ggplot2/Quick_Reference)
 - [利用R进行数据可视化——第一章数据准备](https://rpubs.com/lijunjie_ggplot2/data_preparation)
 - [利用R进行数据可视化——第二章ggplot2简介](https://rpubs.com/lijunjie_ggplot2/Introduction_to_ggplot2)
