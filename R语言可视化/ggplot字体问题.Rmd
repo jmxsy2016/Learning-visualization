@@ -1,0 +1,53 @@
+---
+title: "ggplot字体问题"
+author: "ljj"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    highlight: espresso
+    theme: united
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: true
+    toc_depth: 5
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      fig.show = "hold",
+                      fig.align = "center",
+                      tidy = TRUE)
+```
+
+## 加载经常用的R包
+
+```{r,warning=FALSE,message=FALSE}
+library(pacman)
+p_load(tidyverse,stringr,DT,skimr,DataExplorer,grf,glmnet,caret,tidytext,
+       explore,patchwork,ggrepel,ggcorrplot,gghighlight,ggthemes,fpp2,
+       forecast,magrittr,readxl,writexl,listviewer,car,tseries,vtable)
+```
+
+```{r}
+library(ggplot2)
+d <- data.frame(x=c(0, 0.002, 0.00575), y = 1:3)
+p <- ggplot(d, aes(x, y)) + geom_point() + xlab(NULL) + ylab(NULL)
+print(p)
+```
+
+```{r}
+p + 
+  xlim(NA,0.0061) +
+  theme(text = element_text(family = "Times New Roman",
+                            size = 13)) +
+  theme(axis.text.x = element_text(colour = "red"))
+```
+
+
+
+
+
+
+
+
