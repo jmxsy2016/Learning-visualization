@@ -9,7 +9,7 @@
 - [完整的ggplot2教程-第3部分(1)——相关性](https://rpubs.com/lijunjie_ggplot2/576897)
 - [完整的ggplot2教程-第3部分(2)——偏差图](https://rpubs.com/lijunjie_ggplot2/576957)
 - [完整的ggplot2教程-第3部分(3)——排行和分布图](https://rpubs.com/lijunjie_ggplot2/577314)
-- [ggplot2 Quick_Reference](https://rpubs.com/lijunjie_ggplot2/Quick_Reference)
+- [**ggplot2 Quick_Reference**](https://rpubs.com/lijunjie_ggplot2/Quick_Reference)
 - [利用R进行数据可视化——第一章数据准备](https://rpubs.com/lijunjie_ggplot2/data_preparation)
 - [利用R进行数据可视化——第二章ggplot2简介](https://rpubs.com/lijunjie_ggplot2/Introduction_to_ggplot2)
 - [利用R进行数据可视化——第三章单变量图](https://rpubs.com/lijunjie_ggplot2/Univariate_Graphs)
@@ -27,9 +27,9 @@
 - [scales: Scale Functions for Visualization](https://rpubs.com/lijunjie_ggplot2/605399)
 - [RColorBrewer ColorBrewer palettes](https://rpubs.com/lijunjie_ggplot2/605597)
 - [Broadway Musicals](https://rpubs.com/lijunjie_ggplot2/608744)
-
-
-
+- [ggplot字体问题](https://jmxsy2016.github.io/Learning-visualization/R语言可视化/ggplot字体问题.html)
+- [gganimate动态图](https://jmxsy2016.github.io/Learning-visualization/R语言可视化/gganimate动态图.html)
+- [体育科学家如何在R中使用ggplot2进行更好的可视化-**模板**](https://www.mitchhenderson.org/2020/04/how-sports-scientists-can-use-ggplot2-in-r-to-make-better-visualisations/#)
 
 
 
