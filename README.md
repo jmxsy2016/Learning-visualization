@@ -27,10 +27,10 @@
 - [scales: Scale Functions for Visualization](https://rpubs.com/lijunjie_ggplot2/605399)
 - [RColorBrewer ColorBrewer palettes](https://rpubs.com/lijunjie_ggplot2/605597)
 - [Broadway Musicals](https://rpubs.com/lijunjie_ggplot2/608744)
-- [ggplot字体问题](https://jmxsy2016.github.io/Learning-visualization/R语言可视化/ggplot字体问题.html)
-- [gganimate动态图](https://jmxsy2016.github.io/Learning-visualization/R语言可视化/gganimate动态图.html)
-- [体育科学家如何在R中使用ggplot2进行更好的可视化-**模板**](https://www.mitchhenderson.org/2020/04/how-sports-scientists-can-use-ggplot2-in-r-to-make-better-visualisations/#)
-
+- [ggplot字体问题](https://jmxsy2016.github.io/Learning-visualization/post/ggplot字体问题.html)
+- [gganimate动态图](https://jmxsy2016.github.io/Learning-visualization/post/gganimate动态图.html)
+- [体育科学家如何在R中使用ggplot2进行更好的可视化-**模板**](https://jmxsy2016.github.io/Learning-visualization/post/体育科学家如何在R中使用ggplot2进行更好的可视化.html)
+- [ggplot**字体**问题.html](https://jmxsy2016.github.io/Learning-visualization/post/ggplot字体问题.html)
 
 
 
