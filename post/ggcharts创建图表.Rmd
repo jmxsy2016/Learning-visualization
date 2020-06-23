@@ -1,0 +1,193 @@
+---
+title: "ggcharts:提供了一个高级的{ggplot2}接口来创建通用图表"
+# subtitle: "Lecture title"
+author: 
+- affiliation: Dongbei University of Finance & Economics
+  name: Studennt. LJJ
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    theme: flatly
+    highlight: haddock
+    # code_folding: show
+    toc: yes
+    toc_depth: 5
+    toc_float:
+      collapsed: false
+      smooth_scroll: true
+    keep_md: false
+    keep_tex: false 
+---
+
+## 加载经常用的R包
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      fig.show = "hold",
+                      fig.align = "center",
+                      tidy = FALSE)
+```
+
+```{r,warning=FALSE,message=FALSE}
+library(pacman)
+# 读数据
+p_load(readxl,writexl,data.table,openxlsx,haven,rvest)
+```
+
+```{r,warning=FALSE,message=FALSE}
+# 数据探索
+p_load(tidyverse,DT,skimr,DataExplorer,explore,vtable,stringr,lubridate)
+```
+
+```{r,eval=FALSE,warning=FALSE,message=FALSE}
+# 模型
+p_load(tidyverse,grf,glmnet,caret,tidytext,fpp2,forecast,car,tseries,hdm,tidymodels,broom)
+```
+
+```{r,eval=FALSE,warning=FALSE,message=FALSE}
+# 可视化
+p_load(patchwork,ggrepel,ggcorrplot,gghighlight,ggthemes,shiny)
+```
+
+```{r,eval=FALSE,warning=FALSE,message=FALSE}
+# 其它常用包
+p_load(magrittr,listviewer,devtools,here,janitor,reticulate,jsonlite)
+```
+
+## 牛刀小试
+
+```{r}
+# install.packages("ggcharts")
+library(ggcharts)
+```
+
+多亏了{ggplot2}，您可以在R中创建漂亮的图。但是，从数据可视化的想法到实际的图通常需要花费很多精力。举例来说，假设您要创建一个多面条形图，显示从最高到最低顺序排列的每个构面中的前10个。听起来简单的东西实际上很难实现。 看一看：
+
+```{r}
+data("biomedicalrevenue")
+biomedicalrevenue %>% dim()
+biomedicalrevenue %>% DT::datatable()
+biomedicalrevenue %>% is.na() %>% sum()  # 有两个缺失值
+```
+
+```{r}
+biomedicalrevenue %>% 
+  filter(year  %in% c(2012,2015,2018)) %>% 
+  group_by(year) %>% 
+  top_n(10,revenue) %>% 
+  ungroup %>% 
+  mutate(company = tidytext::reorder_within(company, revenue, year)) %>% 
+  ggplot(aes(company,revenue)) +
+  geom_col() +
+  coord_flip() +
+  tidytext::scale_x_reordered() +
+  facet_wrap(~year, scales = "free_y",ncol = 3) +
+  theme(text = element_text(family = "Times New Roman"))
+```
+
+or
+
+```{r,fig.width=15}
+biomedicalrevenue %>% 
+  filter(year  %in% c(2012)) %>% 
+  top_n(10,revenue) %>% 
+  ggplot(aes(reorder(company,revenue),revenue)) +
+  geom_col(aes(col = company,fill = company)) + 
+  scale_y_continuous(limits = c(0,70),breaks = seq(0,70,10)) +
+  scale_color_brewer(palette = "Set3") +
+  coord_flip() +
+  geom_text(aes(label = revenue),hjust = 0) +
+  theme(legend.position = "none",
+        text = element_text(family = "Times New Roman")) -> p1
+
+biomedicalrevenue %>% 
+  filter(year %in% c(2015)) %>% 
+  top_n(10,revenue) %>% 
+  ggplot(aes(reorder(company,revenue),revenue)) +
+  geom_col(aes(col = company,fill = company)) + 
+  scale_color_brewer(palette = "Set3") +
+  scale_y_continuous(limits = c(0,70),breaks = seq(0,70,10),na.value = 50) +
+  coord_flip() +
+  geom_text(aes(label = revenue),hjust = 0) +
+  theme(legend.position = "none",
+        text = element_text(family = "Times New Roman")) -> p2
+
+biomedicalrevenue %>% 
+  filter(year  %in% c(2018)) %>% 
+  top_n(10,revenue) %>% 
+  ggplot(aes(reorder(company,revenue),revenue)) +
+  geom_col(aes(col = company,fill = company)) + 
+  scale_color_brewer(palette = "Set3") +
+  scale_y_continuous(limits = c(0,90),breaks = seq(0,90,10),na.value = 50) +
+  coord_flip() +
+  geom_text(aes(label = revenue),hjust = 0) +
+  theme(legend.position = "none",
+        text = element_text(family = "Times New Roman")) -> p3
+
+p1 + p2 + p3
+```
+
+```{r}
+biomedicalrevenue %>%
+  filter(year %in% c(2012, 2015, 2018)) %>%
+  bar_chart(x = company, y = revenue, facet = year, top_n = 10) +
+  theme(text = element_text(family = "Times New Roman"))
+```
+
+## 金字塔图表
+
+```{r}
+data("popch")
+popch %>% dim()
+popch %>% is.na() %>% sum()
+popch %>% DT::datatable()
+ggcharts::pyramid_chart(data = popch,
+                        x = age,
+                        y = pop,
+                        group = sex,
+                        xlab = "Population", 
+                        title = "Switzerland 2020") +
+  theme(text = element_text(family = "Times New Roman"))
+```
+
+## 
+
+```{r}
+dumbbell_chart(popeurope, country, pop1952, pop2007, top_n = 10,
+               line_size = 2, point_size = 5) +
+  ggplot2::theme_gray() +
+  theme(text = element_text(family = "Times New Roman"),legend.position = "top") 
+  
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

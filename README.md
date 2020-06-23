@@ -1,6 +1,6 @@
 # 可视化学习
 
-## R语言
+## R语言可视化教程
 
 - [ggplot2学习笔记之简短教程](https://rpubs.com/lijunjie_ggplot2/576373)
 - [完整的ggplot2教程-第1部分——ggplot2简介](https://rpubs.com/lijunjie_ggplot2/ggplot2_introduction)
@@ -21,27 +21,25 @@
 - [利用R进行数据可视化——第九章重中之重之自定义图形](https://rpubs.com/lijunjie_ggplot2/589199)
 - [利用R进行数据可视化——第十章交互图](https://rpubs.com/lijunjie_ggplot2/597913)
 - [利用R进行数据可视化——第十一章建议/最佳做法图](https://rpubs.com/lijunjie_ggplot2/597915)
-- [patchwork-让组合图形更加方便](https://rpubs.com/lijunjie_ggplot2/597961)
-- [ggrepel:调整“ggplot2”重叠的文本和标签](https://rpubs.com/lijunjie_ggplot2/598778)
-- [简单介绍gghighlight](https://rpubs.com/lijunjie_ggplot2/600571)
-- [scales: Scale Functions for Visualization](https://rpubs.com/lijunjie_ggplot2/605399)
-- [RColorBrewer ColorBrewer palettes](https://rpubs.com/lijunjie_ggplot2/605597)
 - [Broadway Musicals](https://rpubs.com/lijunjie_ggplot2/608744)
 - [ggplot字体问题](https://jmxsy2016.github.io/Learning-visualization/post/ggplot字体问题.html)
-- [gganimate动态图](https://jmxsy2016.github.io/Learning-visualization/post/gganimate动态图.html)
 - [体育科学家如何在R中使用ggplot2进行更好的可视化-**模板**](https://jmxsy2016.github.io/Learning-visualization/post/体育科学家如何在R中使用ggplot2进行更好的可视化.html)
 - [ggplot**字体**问题.html](https://jmxsy2016.github.io/Learning-visualization/post/ggplot字体问题.html)
+- [ggplot2主题元素演示](https://henrywang.nl/ggplot2-theme-elements-demonstration/):主题元素详细讲解
 
 
+## R可视化包学习
 
-
-
-
-
-
-
-
-
+- [ggcharts](https://thomas-neitmann.github.io/ggcharts/index.html)
+- [ggtext](https://wilkelab.org/ggtext/)
+- [ggrepel:调整“ggplot2”重叠的文本和标签](https://rpubs.com/lijunjie_ggplot2/598778)
+- [scales: Scale Functions for Visualization](https://rpubs.com/lijunjie_ggplot2/605399)
+- [RColorBrewer ColorBrewer palettes](https://rpubs.com/lijunjie_ggplot2/605597)
+- [gganimate动态图](https://jmxsy2016.github.io/Learning-visualization/post/gganimate动态图.html)
+- [ggthemes-主题模板](https://yutannihilation.github.io/allYourFigureAreBelongToUs/ggthemes/)
+- [简单介绍gghighlight](https://rpubs.com/lijunjie_ggplot2/600571)
+- [patchwork-让组合图形更加方便](https://rpubs.com/lijunjie_ggplot2/597961)
+- [Markdown Themes for 'ggplot2'](https://github.com/thomas-neitmann/mdthemes)
 
 
 

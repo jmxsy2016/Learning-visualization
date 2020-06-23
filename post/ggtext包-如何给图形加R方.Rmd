@@ -1,0 +1,154 @@
+---
+title: "ggtext包-如何给图形加R方"
+# subtitle: "Lecture title"
+author: 
+- affiliation: Dongbei University of Finance & Economics
+  name: Studennt. LJJ
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    theme: flatly
+    highlight: haddock
+    # code_folding: show
+    toc: yes
+    toc_depth: 5
+    toc_float:
+      collapsed: false
+      smooth_scroll: true
+    keep_md: false
+    keep_tex: false 
+---
+
+## 加载经常用的R包
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      fig.show = "hold",
+                      fig.align = "center",
+                      tidy = FALSE)
+```
+
+```{r,warning=FALSE,message=FALSE}
+library(pacman)
+# 读数据
+p_load(readxl,writexl,data.table,openxlsx,haven,rvest)
+```
+
+```{r,warning=FALSE,message=FALSE}
+# 数据探索
+p_load(tidyverse,DT,skimr,DataExplorer,explore,vtable,stringr,lubridate)
+```
+
+```{r,eval=FALSE,warning=FALSE,message=FALSE}
+# 模型
+p_load(tidyverse,grf,glmnet,caret,tidytext,fpp2,forecast,car,tseries,hdm,tidymodels,broom)
+```
+
+```{r,eval=FALSE,warning=FALSE,message=FALSE}
+# 可视化
+p_load(patchwork,ggrepel,ggcorrplot,gghighlight,ggthemes,shiny)
+```
+
+```{r,eval=FALSE,warning=FALSE,message=FALSE}
+# 其它常用包
+p_load(magrittr,listviewer,devtools,here,janitor,reticulate,jsonlite)
+```
+
+```{r}
+# remotes::install_github("wilkelab/ggtext")
+library(ggtext)
+```
+
+## Plotting with markdown text
+
+```{r}
+data <- tibble(
+  bactname = c("Staphylococcaceae", "Moraxella", "Streptococcus", "Acinetobacter"),
+  OTUname = c("OTU 1", "OTU 2", "OTU 3", "OTU 4"),
+  value = c(-0.5, 0.5, 2, 3)
+)
+```
+
+```{r}
+iris %>% 
+  group_by(Species) %>% 
+  summarise(r_square = cor(Sepal.Length,Sepal.Width)^2) %>% 
+  mutate(Sepal.Length = 8,
+         Sepal.Width = 4.5,
+         label = glue::glue("r^2 = {round(r_square,2)}")) -> iris_cor
+iris_cor
+```
+
+```{r}
+iris %>% 
+  ggplot(aes(Sepal.Length,Sepal.Width)) +
+  geom_point(aes(col = Species)) +
+  geom_smooth(method = "lm",aes(col = Species)) +
+  facet_wrap(~Species) +
+  geom_text(data = iris_cor,aes(label = label),hjust = 1,vjust = 1,family =  "Times New Roman") +
+  theme(legend.position = "none",
+        text = element_text(family = "Times New Roman")) 
+```
+
+```{r}
+iris_cor_md <- iris_cor %>%
+  mutate(# markdown version of text label
+    label = glue::glue("*r*<sup>2</sup> = {round(r_square, 2)}"))
+
+iris_cor_md
+
+iris %>% 
+  ggplot(aes(Sepal.Length,Sepal.Width)) +
+  geom_point(aes(col = Species)) +
+  geom_smooth(method = "lm",aes(col = Species)) +
+  facet_wrap(~Species) +
+  geom_richtext(data = iris_cor_md,aes(label = label),hjust = 1,vjust = 1,family =  "Times New Roman") +
+  theme(legend.position = "none",
+        text = element_text(family = "Times New Roman")) 
+```
+
+```{r}
+iris %>%
+  ggplot(aes(Sepal.Length, Sepal.Width)) +
+  geom_point(aes(col = Species)) +
+  geom_smooth(method = "lm", aes(col = Species)) +
+  facet_wrap( ~ Species) +
+  geom_richtext(
+    data = iris_cor_md,
+    aes(label = label),
+    hjust = 1,
+    vjust = 1,
+    family =  "Times New Roman",
+    # remove label background and outline
+    fill = NA,
+    label.color = NA,
+    # remove label padding, since we have removed the label outline
+    label.padding = grid::unit(rep(0, 4), "pt")
+  ) +
+  theme(legend.position = "none",
+        text = element_text(family = "Times New Roman")) 
+```
+
+```{r}
+iris %>%
+  ggplot(aes(Sepal.Length, Sepal.Width)) +
+  geom_point(aes(col = Species)) +
+  geom_smooth(method = "lm", aes(col = Species)) +
+  facet_wrap( ~ Species) +
+  aes(colour = Species) +
+  geom_richtext(
+    data = iris_cor_md,
+    aes(label = label,fill = after_scale(alpha(color, .2))),
+    hjust = 1,
+    vjust = 1,
+    family =  "Times New Roman",
+    text.colour = "black"
+  ) +
+  theme(legend.position = "none",
+        text = element_text(family = "Times New Roman"))
+```
+
+
+
+
+
