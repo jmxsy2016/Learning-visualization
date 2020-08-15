@@ -36,7 +36,7 @@
 - [Broadway Musicals](https://rpubs.com/lijunjie_ggplot2/608744)
 - [体育科学家如何在R中使用ggplot2进行更好的可视化-**模板**](https://jmxsy2016.github.io/Learning-visualization/post/体育科学家如何在R中使用ggplot2进行更好的可视化.html)
 - [ggplot**字体**问题](https://jmxsy2016.github.io/Learning-visualization/post/ggplot字体问题.html)
-- [ggplot2主题元素演示](https://henrywang.nl/ggplot2-theme-elements-demonstration/)[笔记](https://jmxsy2016.github.io/Learning-visualization/post/ggplot2-Theme-Elements-Reference.html):主题元素详细讲解
+- [ggplot2主题元素演示](https://henrywang.nl/ggplot2-theme-elements-demonstration/)和[笔记](https://jmxsy2016.github.io/Learning-visualization/post/ggplot2-Theme-Elements-Reference.html):主题元素详细讲解
 
 ---
 

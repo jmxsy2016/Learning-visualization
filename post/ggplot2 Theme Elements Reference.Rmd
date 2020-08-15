@@ -186,5 +186,5 @@ p5
 
 # Final Notes
 
-从示例中可以看到，要修改阴谋中的单个元素，只需遵循参数: `theme(element.name = element function())`。这个例子中的最后一个图并不一定很漂亮，因为我使得识别相应的元素变得更加容易。
+从示例中可以看到，要修改plot中的单个元素，只需遵循参数: `theme(element.name = element function())`。这个例子中的最后一个图并不一定很漂亮，因为我使得识别相应的元素变得更加容易。
 
