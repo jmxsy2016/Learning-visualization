@@ -1,0 +1,190 @@
+--- 
+title: "ggplot2 theme elements reference"
+# subtitle: "Lecture title"
+author:
+- affiliation: Dongbei University of Finance & Economics
+  name: Studennt. Li Junjie
+date: '`r Sys.Date()`'
+output:
+  bookdown::html_document2:
+    # code_folding: hide
+    highlight: pygments
+    # highlight: zenburn
+    # highlight: haddock
+    theme: darkly
+    # theme: cerulean
+    df_print: paged	
+    number_sections: true
+    keep_md: no
+    keep_tex: no
+    toc: yes
+    toc_depth: 5
+    toc_float:
+      collapsed: no
+      smooth_scroll: yes
+    # css: styles.css
+# bibliography: [book.bib, packages.bib]
+# biblio-style: apalike
+link-citations: yes
+sansfont: Times New Roman
+always_allow_html: yes
+urlcolor: "red"
+description: "This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook."
+abstract: |
+    ggplot2 is one of the most powerful packages in r for data visualizations and it is essential to master the underlying grammar of graphics to fully utilize its power. While the theming system of ggplot2 allows you to customize the appearance of the plot according to our needs in practice, it is always a frustration to identify the elements on the plot you want to change as you may find it difficult to remember the element names and their corresponding functions to modify, at least this is the case for me.
+---
+
+# 加载经常用的R包
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      cache = FALSE,
+                      fig.show = "hold",
+                      fig.align = "center",
+                      tidy = FALSE)
+                      # class.source = "bg-warning")
+```
+
+```{r,echo=FALSE}
+library(bubblyr)
+# bubblyr::bubbly(theme = "sweet")
+bubblyr::bubbly(theme = "rladies")
+```
+
+```{js, echo=FALSE}
+$('.title').css('color', 'red')
+$('.title').css('font-family', 'Times New Roman')
+```
+
+```{css, echo=FALSE}
+* {
+    # font-size: 17px !important;
+    font-family: "Times New Roman" !important;
+    # color: rgb(199 237	204)
+}
+::selection {
+   # background: rgb(135 206 255);
+}
+```
+
+```{r,warning=FALSE,message=FALSE}
+library(pacman)
+# 读数据
+p_load(readxl,writexl,data.table,openxlsx,haven,rvest)
+```
+
+```{r,warning=FALSE,message=FALSE}
+# 数据探索
+p_load(tidyverse,DT,skimr,DataExplorer,explore,vtable,stringr,kableExtra,lubridate)
+```
+
+```{r,eval=FALSE,warning=FALSE,message=FALSE}
+# 模型
+p_load(grf,glmnet,caret,tidytext,fpp2,forecast,car,tseries,hdm,tidymodels,broom)
+```
+
+```{r,eval=FALSE,warning=FALSE,message=FALSE}
+# 可视化
+p_load(patchwork,ggrepel,ggcorrplot,gghighlight,ggthemes,shiny)
+```
+
+```{r,eval=TRUE,warning=FALSE,message=FALSE}
+# 其它常用包
+p_load(magrittr,listviewer,devtools,here,janitor,reticulate,jsonlite)
+```
+
+# Theme Elements Reference
+
+```{r}
+knitr::include_graphics(here::here("EZ9KYESUYAAzxpg.png"))
+```
+
+```{r}
+knitr::include_graphics(here::here("theme_elements.png"))
+```
+
+# 基础图形
+
+```{r}
+mpg$class %>% unique()
+mpg %>% 
+  filter(class != "2seater",
+         manufacturer  %in% c("toyota", "volkswagen")) -> mpg_df
+```
+
+```{r}
+mpg_df %>% str()
+```
+
+```{r}
+mpg_df
+```
+
+```{r}
+p <- mpg_df %>% 
+  ggplot(aes(displ,hwy,col = factor(cyl))) +
+  geom_point() +
+  facet_grid(manufacturer ~ class) +
+  labs(title = "hwy vs. displ") +
+  scale_color_discrete(name = "Cylinders") +
+  mytheme
+
+p 
+```
+
+# plot元素
+
+```{r}
+p1 <- p + 
+  theme(plot.background = element_rect(fill = "lemonchiffon",
+                                       color = "black",
+                                       size = 2),
+        plot.title = element_text(hjust = 0.5, colour = "red", face = "bold"),
+        plot.margin = margin(20, 20, 20, 20))
+p1
+```
+
+# Axis元素
+
+```{r}
+p2 <- p1 + theme(axis.line = element_line(colour = "yellow", size = 1),
+                 axis.text = element_text(colour = "red"),
+                 axis.ticks = element_line(colour = "purple", size = 1))
+p2
+```
+
+# Legend元素
+
+```{r}
+p3 <- p2 + theme(legend.background = element_rect(fill =  "deepskyblue2"),
+                 legend.key = element_rect(fill = "lemonchiffon"),
+                 legend.title = element_text(colour = "white", face = "bold"),
+                 legend.text = element_text(colour = "blue"),
+                 legend.margin = margin(10, 10, 10, 10))
+p3
+```
+
+# Panel元素
+
+```{r}
+p4 <- p3 + theme(panel.background = element_rect(fill = "lightblue"),
+      panel.grid = element_line(colour = "grey60", size = 0.2),
+      panel.border = element_rect(colour = "black", fill = NA))
+ 
+p4
+```
+
+# Facetting Elements
+
+```{r}
+p5 <- p4 + theme(strip.background = element_rect(fill = "steelblue"),
+      strip.text = element_text(colour = "white"),
+      panel.spacing = unit(0.3, "in"))
+ 
+p5
+```
+
+# Final Notes
+
+从示例中可以看到，要修改阴谋中的单个元素，只需遵循参数: `theme(element.name = element function())`。这个例子中的最后一个图并不一定很漂亮，因为我使得识别相应的元素变得更加容易。
+

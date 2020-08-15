@@ -1,0 +1,250 @@
+--- 
+title: "棕色企鹅-为数据探索和可视化提供一个伟大的数据集"
+# subtitle: "Lecture title"
+author:
+- affiliation: Dongbei University of Finance & Economics
+  name: Studennt. Li Junjie
+date: '`r Sys.Date()`'
+output:
+  bookdown::html_document2:
+    # code_folding: hide
+    highlight: pygments
+    # highlight: zenburn
+    # highlight: haddock
+    theme: darkly
+    # theme: cerulean
+    df_print: paged	
+    number_sections: true
+    keep_md: no
+    keep_tex: no
+    toc: yes
+    toc_depth: 5
+    toc_float:
+      collapsed: no
+      smooth_scroll: yes
+    # css: styles.css
+# bibliography: [book.bib, packages.bib]
+# biblio-style: apalike
+link-citations: yes
+sansfont: Times New Roman
+always_allow_html: yes
+urlcolor: "red"
+description: "This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook."
+abstract: |
+    The data this week comes from Dr. Kristen Gorman by way of the palmerpenguins R package by Dr. Kristen Gorman, Dr. Allison Horst, and Dr. Alison Hill.
+    
+    Their palmerpenguins packagedown site and corresponding GitHub Repo has all the details, which I will duplicate some of below.
+---
+
+# 加载经常用的R包
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      cache = FALSE,
+                      fig.show = "hold",
+                      fig.align = "center",
+                      tidy = FALSE)
+                      # class.source = "bg-warning")
+```
+
+```{r,echo=FALSE}
+library(bubblyr)
+bubblyr::bubbly(theme = "sweet")
+# bubblyr::bubbly(theme = "rladies")
+```
+
+```{js, echo=FALSE}
+$('.title').css('color', 'red')
+$('.title').css('font-family', 'Times New Roman')
+```
+
+```{css, echo=FALSE}
+* {
+    # font-size: 17px !important;
+    font-family: "Times New Roman" !important;
+    # color: rgb(199 237	204)
+}
+::selection {
+   # background: rgb(135 206 255);
+}
+```
+
+```{r,warning=FALSE,message=FALSE}
+library(pacman)
+# 读数据
+p_load(readxl,writexl,data.table,openxlsx,haven,rvest)
+```
+
+```{r,warning=FALSE,message=FALSE}
+# 数据探索
+p_load(tidyverse,DT,skimr,DataExplorer,explore,vtable,stringr,kableExtra,lubridate)
+```
+
+```{r,eval=FALSE,warning=FALSE,message=FALSE}
+# 模型
+p_load(grf,glmnet,caret,tidytext,fpp2,forecast,car,tseries,hdm,tidymodels,broom)
+```
+
+```{r,eval=FALSE,warning=FALSE,message=FALSE}
+# 可视化
+p_load(patchwork,ggrepel,ggcorrplot,gghighlight,ggthemes,shiny)
+```
+
+```{r,eval=TRUE,warning=FALSE,message=FALSE}
+# 其它常用包
+p_load(magrittr,listviewer,devtools,here,janitor,reticulate,jsonlite)
+```
+
+# 数据
+
+```{r}
+tibble::tribble(
+            ~variable,    ~class,                                               ~description,
+            "species", "integer",              "Penguin species (Adelie, Gentoo, Chinstrap)",
+             "island", "integer",         "Island where recorded (Biscoe, Dream, Torgersen)",
+     "bill_length_mm",  "double", "Bill length in millimeters (also known as culmen length)",
+      "bill_depth_mm",  "double",   "Bill depth in millimeters (also known as culmen depth)",
+  "flipper_length_mm", "integer",                                     "Flipper length in mm",
+        "body_mass_g", "integer",                                       "Body mass in grams",
+                "sex", "integer",                                        "sex of the animal",
+               "year", "integer",                                            "year recorded"
+  ) -> df
+
+df %>% 
+  kableExtra::kable() %>%
+  kable_styling(full_width = TRUE,bootstrap_options = "hover",position = "center") %>%
+  row_spec(row = 0,italic = TRUE)
+```
+
+```{r,warning=FALSE,message=FALSE}
+library(tidytuesdayR)
+library(visdat)
+library(ggridges)
+library(png)
+library(ggtext)
+```
+
+```{r}
+tuesdata <- tt_load("2020-07-28")
+
+# tuesdata
+
+penguins <- tuesdata$penguins
+```
+
+```{r,include=FALSE,eval=FALSE}
+knitr::knit_exit()
+```
+
+```{r}
+penguins %>% 
+  head(100) %>% 
+  kableExtra::kable(format = "html") %>%
+  kableExtra::kable_styling(full_width = TRUE,bootstrap_options = "hover",position = "center") %>%
+  kableExtra::row_spec(row = 0,italic = TRUE) 
+```
+
+```{r}
+penguins %>% datatable()
+```
+
+```{r}
+penguins %>% glimpse()
+```
+
+```{r}
+penguins %<>% 
+  mutate(across(where(is.character),as.factor)) %>% 
+  drop_na() 
+
+penguins %>% glimpse()
+```
+
+```{r}
+penguins %>% map(n_distinct)
+```
+
+```{r}
+penguins %>% 
+  is.na() %>% 
+  sum()  # 已经没有缺失值了
+```
+
+# 绘图
+
+```{r}
+img <- readPNG(here::here("figure/penguins.png"))
+```
+
+```{r}
+penguins %>% 
+  ggplot(aes(x = body_mass_g,y = species,fill = species,col = species)) +
+  geom_density_ridges() +
+  scale_fill_manual(values = c("#F07430", "#C55BCC", "#2D7174")) +
+  scale_color_manual(values = c("#F07430", "#C55BCC", "#2D7174")) +
+  annotate(
+    geom = "text",
+    x = 5050,
+    y = 3.5,
+    label = "Gentoo",
+    color = "white"
+  ) +
+  annotate(
+    geom = "text",
+    x = 3650,
+    y = 2.8,
+    label = "Chinstrap",
+    color = "white"
+  ) +
+  annotate(
+    geom = "text",
+    x = 3650,
+    y = 1.6,
+    label = "Adelie",
+    color = "white"
+  ) +
+  annotation_custom(
+    grob = grid::rasterGrob(img),
+    xmin = 5500,
+    xmax = 6500,
+    ymin = 1.9,
+    ymax = 2.8
+  )  +
+  annotate(
+    geom = "curve",
+    x = 5600,
+    xend = 4500,
+    y = 2.7,
+    yend = 2.5,
+    curvature = 0.2,
+    size = 0.5,
+    color = "#C55BCC",
+    arrow = arrow(length = unit(0.1, "inches"))) +
+  annotate(
+    geom = "curve",
+    x = 6300,
+    xend = 5000,
+    y = 1.9,
+    yend = 1.2,
+    curvature = -0.2,
+    size = 0.5,
+    color = "#F07430",
+    arrow = arrow(length = unit(0.1, "inches"))) +
+  scale_y_discrete(expand = expansion(mult = c(0.05, 0.6))) +
+   labs(title = "Penguin Body Mass in grams by species (<span style = 'color:#F07430'>Adelie</span>, 
+       <span style = 'color:#C55BCC'>Chinstrap</span>, 
+       <span style = 'color:#2D7174'>Gentoo</span>)",
+       x = NULL,
+       caption = "Dataviz: @henrywangnl <br>Artwork by @allison_horst") +
+   theme(axis.title.y = element_blank(),
+        axis.line.y = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.ticks.x = element_line(color = "grey50"),
+        legend.position = "none",
+        panel.background = element_blank(),
+        plot.title = element_markdown(hjust = 0.5,
+                                      padding = margin(t = 10, b = 10),
+                                      size = 16),
+        plot.caption = element_markdown(padding = margin(t = 10)))
+```

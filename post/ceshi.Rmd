@@ -1,0 +1,150 @@
+--- 
+title: "我的笔记模板"
+# subtitle: "Lecture title"
+author:
+- affiliation: Dongbei University of Finance & Economics
+  name: Studennt. Li Junjie
+date: '`r Sys.Date()`'
+output:
+  bookdown::html_document2:
+    # code_folding: hide
+    highlight: pygments
+    # highlight: zenburn
+    # highlight: haddock
+    theme: darkly
+    # theme: cerulean
+    df_print: paged	
+    number_sections: true
+    keep_md: no
+    keep_tex: no
+    toc: yes
+    toc_depth: 5
+    toc_float:
+      collapsed: no
+      smooth_scroll: yes
+    # css: styles.css
+# bibliography: [book.bib, packages.bib]
+# biblio-style: apalike
+link-citations: yes
+sansfont: Times New Roman
+always_allow_html: yes
+urlcolor: "red"
+description: "This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook."
+abstract: |
+    本章介绍 R 语言编程与数据可视化基础，对比了 base、 lattice 和 ggplot2 包的图形语法，重点介绍了 ggplot2 包的图形语法介绍 R 语言编程与数据可视化基础，对比了 base、 lattice 和 ggplot2 包的图形语法，重点介绍了 ggplot2 包的图形语法
+    
+    源代码下载 Github 网址： <https://github.com/EasyChart/Beautiful-Visualization-with-R>
+---
+
+# 加载经常用的R包
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      cache = FALSE,
+                      fig.show = "hold",
+                      fig.align = "center",
+                      tidy = FALSE)
+                      # class.source = "bg-warning")
+```
+
+```{r,echo=FALSE}
+library(bubblyr)
+# bubblyr::bubbly(theme = "sweet")
+bubblyr::bubbly(theme = "rstudio")
+```
+
+```{js, echo=FALSE}
+$('.title').css('color', 'red')
+$('.title').css('font-family', 'Times New Roman')
+```
+
+```{css, echo=FALSE}
+* {
+    # font-size: 17px !important;
+    font-family: "Times New Roman" !important;
+    color: rgb(199 237	204)
+}
+::selection {
+   # background: rgb(135 206 255);
+}
+```
+
+```{r,warning=FALSE,message=FALSE}
+library(pacman)
+# 读数据
+p_load(readxl,writexl,data.table,openxlsx,haven,rvest)
+```
+
+```{r,warning=FALSE,message=FALSE}
+# 数据探索
+p_load(tidyverse,DT,skimr,DataExplorer,explore,vtable,stringr,kableExtra,lubridate)
+```
+
+```{r,eval=FALSE,warning=FALSE,message=FALSE}
+# 模型
+p_load(grf,glmnet,caret,tidytext,fpp2,forecast,car,tseries,hdm,tidymodels,broom)
+```
+
+```{r,eval=FALSE,warning=FALSE,message=FALSE}
+# 可视化
+p_load(patchwork,ggrepel,ggcorrplot,gghighlight,ggthemes,shiny)
+```
+
+```{r,eval=TRUE,warning=FALSE,message=FALSE}
+# 其它常用包
+p_load(magrittr,listviewer,devtools,here,janitor,reticulate,jsonlite)
+```
+
+# 前言
+
+This is a _sample_ book written in *Markdown*[@R-base]. You can use anything that Pandoc's Markdown supports, e.g., a math equation $a^2 + b^2 = c^2$^[This is a footnote.]
+
+The *bookdown* package can be installed from CRAN or Github:
+
+## 技巧
+
+- [@R-base]
+- $a^2 + b^2 = c^2$
+- \^[This is a footnote.]
+- \# Preface {-}
+- fig.dim = c(6,4)表示fig.width = 6和fig.height = 4
+- out.width = '80％'表示页面宽度的80％
+- fig.cap：图形标题
+- ```` ```{r}``` ````
+- \` r  x  \`
+- 同一代码块并排放置多个图形，可以将`r text_spec("fig.show='hold'",color = "red")`选项与`r text_spec('"out.width"',color = "red")`选项一起使用
+- `knitr::include_graphics()`函数
+- 使用`*number_sections*`选项将节编号添加到标题
+
+## 代码
+
+```{r,collapse=TRUE}
+1 + 1
+mtcars
+```
+
+```{r ,fig.cap="a simple plot"}
+iris %>% ggplot(aes(Sepal.Length,Sepal.Width,col = Species)) +
+  geom_point() +
+  geom_smooth() +
+  ggthemes::theme_economist() +
+  theme(text = element_text(family = enfont))
+```
+
+# Reference
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

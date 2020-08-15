@@ -1,0 +1,420 @@
+--- 
+title: "01-R语言编程与绘图基础"
+# subtitle: "Lecture title"
+author:
+- affiliation: Dongbei University of Finance & Economics
+  name: Studennt. Li Junjie
+date: '`r Sys.Date()`'
+output:
+  bookdown::html_document2:
+    # code_folding: hide
+    highlight: pygments
+    # highlight: zenburn
+    # highlight: haddock
+    # theme: darkly
+    theme: cerulean
+    df_print: paged	
+    number_sections: true
+    keep_md: no
+    keep_tex: no
+    toc: yes
+    toc_depth: 5
+    toc_float:
+      collapsed: no
+      smooth_scroll: yes
+    # css: styles.css
+# bibliography: [book.bib, packages.bib]
+# biblio-style: apalike
+link-citations: yes
+sansfont: Times New Roman
+always_allow_html: yes
+urlcolor: "red"
+description: "This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook."
+abstract: |
+    本章介绍 R 语言编程与数据可视化基础，对比了 base、 lattice 和 ggplot2 包的图形语法，重点介绍了 ggplot2 包的图形语法介绍 R 语言编程与数据可视化基础，对比了 base、 lattice 和 ggplot2 包的图形语法，重点介绍了 ggplot2 包的图形语法
+    
+    源代码下载 Github 网址： <https://github.com/EasyChart/Beautiful-Visualization-with-R>
+---
+
+# 加载经常用的R包
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      cache = FALSE,
+                      fig.show = "hold",
+                      fig.align = "center",
+                      tidy = FALSE)
+                      # class.source = "bg-warning")
+```
+
+```{r,echo=FALSE}
+# library(bubblyr)
+# bubblyr::bubbly(theme = "sweet")
+# bubblyr::bubbly(theme = "rladies")
+```
+
+```{js, echo=FALSE}
+$('.title').css('color', 'red')
+$('.title').css('font-family', 'Times New Roman')
+```
+
+```{css, echo=FALSE}
+* {
+    # font-size: 17px !important;
+    font-family: "Times New Roman" !important;
+    # color: rgb(199 237	204)
+}
+::selection {
+   # background: rgb(135 206 255);
+}
+```
+
+```{r,warning=FALSE,message=FALSE}
+library(pacman)
+# 读数据
+p_load(readxl,writexl,data.table,openxlsx,haven,rvest)
+```
+
+```{r,warning=FALSE,message=FALSE}
+# 数据探索
+p_load(tidyverse,DT,skimr,DataExplorer,explore,vtable,stringr,kableExtra,lubridate)
+```
+
+```{r,eval=FALSE,warning=FALSE,message=FALSE}
+# 模型
+p_load(grf,glmnet,caret,tidytext,fpp2,forecast,car,tseries,hdm,tidymodels,broom)
+```
+
+```{r,eval=FALSE,warning=FALSE,message=FALSE}
+# 可视化
+p_load(patchwork,ggrepel,ggcorrplot,gghighlight,ggthemes,shiny)
+```
+
+```{r,eval=TRUE,warning=FALSE,message=FALSE}
+# 其它常用包
+p_load(magrittr,listviewer,devtools,here,janitor,reticulate,jsonlite)
+```
+
+# 学术图表的基本概念
+
+保存图片时，一定要保存成高分辨率的TIFF格式和EPS矢量格式的图片，因为矢量图片是可以使用图片处理软件进行再编辑的。由数据生成的图表是可重复修改的，因此一定要保存好原始数据，一旦发现图表有任何问题可以马上进行修改。
+
+学术图表首先要规范，符合期刊的投稿要求，然后在规范的基础上实现图表的美观和专业。在当前贯彻科技论文规范化、标准化的同时，图表的设计也应规范化、标准化。总而言之，学术图表的制作原则主要是规范、简洁、专业和美观。
+
+# 你为什么选择R
+
+“工欲善其事，必先利其器”，学术绘图软件的选择与使用特别重要。不同学科的研究人员使用的软件有所不同，但是基础的绘图思想与理念是相通的（这部分会在后面的章节讲解）。具有工科背景的人员常使用MATLAB，具有计算机背景的人员常使用Python，具有统计学科背景的人员常使用R，具有医学背景的人员常使用 GraphPad Prism 等。常用的**学术图表绘制软件**包括Excel、 Origin、SigmPlot、 GraphPad Prism、 MATLAB、 Python、 R 等
+
+*MATLAB*、 *Python* 和 *R*这3款软件，则需要编程才能实现图表的绘制。这些软件本身包含很多数据可视化的函数（ function）或者包（package），供用户绘图时使用。尤其是在不同的数据集需要重复操作的情况，如果使用界面绘图软件，则可能需要从头到尾将绘图流程重新实现一遍，而相比之下，通过代码来处理数据就会更加容易，因为针对不同的数据集只需稍微改动一下代码就可以解决。如果你充分掌握代码与算法，那也可以自己编写函数设计新颖的图表。
+
+在这么多种绘图软件中，我们为什么要选择 R 呢？首先因为 R 是开源的，可以免费使用。其次，
+R 是一套完整的数据处理、计算和制图软件系统。其功能包括：**数据存储和处理系统**、**数组运算工具**、**完整连贯的统计分析工具**、**优秀的统计制图功能**。尤其是R的ggplot2包及其拓展包以人性化的图形语法，可以快速帮助用户展示数据，并实现个性化的图表。另外， R 还有很多其他绘图包，比
+如可以绘制三维图表的 plot3D 包等，可以帮助用户绘制几乎所有常见类型的图表。
+
+绘图软件只是一个工具。归根结底，**对数据的分析和图表的设计取决于你自己**。如果你打算深入研究数据，而且日后可能（或者希望日后）还会接触大量与数据相关的项目，那么现在花些时间学习编程最终会节省其他项目的时间，并且作品也会给人留下更加深刻的印象。你的编程技巧会在每一次项目中获得提高，你会发现编程越来越容易。
+
+# R软件的安装和使用
+
+使用 detach()函数： `detach("package: ggplot2")`解除使用的包。
+
+# R语言编程基础
+
+```{r}
+is.integer(1L)
+```
+
+```{r}
+is.double(1.1)
+```
+
+```{r}
+lubridate::ymd(20201010) %>% typeof() # 时间本质是double类型
+```
+
+```{r}
+is.character("a")
+```
+
+```{r}
+is.logical(c(TRUE,FALSE))
+```
+
+```{r}
+is.numeric(1L)
+```
+
+```{r}
+is.numeric(1.1)
+```
+
+向量是用于存储数值型、字符型或逻辑型数据的一维数组。
+
+```{r}
+c(1:10)
+```
+
+```{r}
+letters
+map(letters,is.character) %>% unlist()
+```
+
+```{r}
+seq(1,10,length.out = 20)
+```
+
+```{r}
+rep(1:3,times = 3)
+rep(1:3,each = 3)
+```
+
+```{r}
+sort(c(2.1,1.2,3.3,5.4,10.5))
+c(2.1,1.2,3.3,5.4,10.5) %>% order()
+```
+
+```{r}
+sort(c(2.1,1.2,3.3,5.4,10.5),index.return = TRUE)
+```
+
+```{r}
+dplyr::n_distinct(iris)
+dplyr::distinct(iris)
+```
+
+```{r}
+rep(letters,3) %>% unique()
+```
+
+```{r}
+unique(iris) %>% as_tibble()
+```
+
+连续向量的离散化
+
+```{r}
+cut(1:10,breaks = c(0,1,3,5,11),right = FALSE)
+```
+
+**因子（ factor）**是 R 语言中许多强大运算的基础，包括许多针对表格数据的运算，可分为**类别型变量**和**有序型变量**。因子可以看成是包含了额外信息的向量，这额外的信息就是不同的类别，称之为水平（ level）。因子在 R 中非常重要，因为它决定了数据的分析方式，以及如何进行视觉呈现。
+
+```{r}
+c("Fair","Good", "Ideal", "Premium", "Very Good","Premium","Premium","Fair") -> x
+x
+```
+
+```{r}
+factor(x)  # 因子的水平默认依字母顺序创建
+```
+
+```{r}
+x %>% fct_infreq()
+```
+
+```{r}
+x %>% fct_inorder()
+```
+
+```{r}
+factor(x=c(1,3,5,2), levels= c(1,2,3,5), ordered=TRUE) -> y
+y
+```
+
+```{r}
+y %>% typeof()
+y %>% as.numeric()  # 失效
+y %>% as.character() %>% as.numeric() # 成功
+```
+
+```{r}
+df <- tibble(x = 1:10,
+             y = rep(1:5,each = 2),
+             z = letters[1:10])
+df
+```
+
+```{r}
+df[1:5,]
+df[,1:3]
+```
+
+```{r}
+df$x
+df[["x"]]
+df[[1]]
+```
+
+```{r}
+map(df,1)
+```
+
+```{r}
+dim(iris)[[1]]
+```
+
+```{r}
+tibble(x = numeric(),y = character())
+```
+
+`1．类别型`
+
+    类别型属性（ categorical attribute）是用于区分不同数据对象的符号或名称，而它们是没有顺序关系的，又包含多元类别和二元类别两种类型。对于多元类别，可以理解为购买服装时的不同服装名称，如衬衫、 毛衣、 T 恤、夹克等；对于二元类别，可以理解为购买服装时的不同性别，只有男士和女士两种性别分类。类别型数据的可视化一般使用标尺类中的分类尺度。
+
+`2. 序数型`
+
+    序数型属性（ ordinal attribute）的属性值是具有顺序关系，或者存在衡量属性值顺序关系的规则。比如常见的时序数据， 一般按时间先后排序；还有调查问卷中经常使用的5个喜欢程度：非常喜欢、比较喜欢、 无所谓、不太喜欢、非常不喜欢。序数型数据的可视化一般使用标尺类中的顺序尺度和时间尺度两种类型。
+    
+    序数型数据的排列方向有三种，分别是单向型（sequential），有公共零点的双向型（ diverging），以及环状周期型（ cyclic）。
+    
+`3. 数值型 `
+
+    数值型属性（ numeric attribute）使用定量方法表达属性值，如整数或者实数， 包括区间型数值属性（ interval-scaled attribute） 和比值型数值属性（ ratio-scaled attribute）。区间型与比值型数值最大的区别就是有无基准点， 通常为零点（ internal zero-point）。比值型数值属性的数据一般拥有基准点， 比如开氏温标（ K）以绝对零度（0K=273.15oC）为其零点，以及平时通常使用的数量、重量、 高度和速度等。
+    
+    而区间型数值属性的数据的起始值一般是在整个实数区间上取值，可进行差异运算，但不能进行比值运算。比如摄氏温标（oC）与华氏温标（oF）下的温度、日历中的年份、经度（ longitude）与纬度（ latitude），它们都没有真正的零点。在日历中，0 年并不对应时间的开始，但 0oC 并不代表没有温度。所以可以说10oC比5oC 温度高（ 差异运算），但是不能说 10oC 是 5oC 的 2 倍（ 比值运算）。  
+    
+一维数据列表和二维数据列表的区别:
+
+**一维数据列表**就是由字段和记录组成的表格。一般来说字段在首行，下面每一行是一条记录。一维数据列表通常可以作为数据分析的数据源，每一行代表完整的一条数据记录，所以可以很方便地进行数据的录入、更新、查询、匹配等
+
+```{r}
+iris %>% tidyr::pivot_longer(-Species)
+```
+
+二维数据列表就是行和列都有字段，它们相交的位置是数值的表格。这类表格一般是由分类汇总得来的，既有分类，又有汇总，所以是通过一维数据列表加工处理过的，通常用于呈现展示
+
+```{r}
+iris
+```
+
+一维数据列表也常被称为**流水线表格**，它和二维数据列表做出的数据透视表最大的区别在于“行总计”。*判断数据是一维数据列表还是二维数据列表的一个最简单的办法*，就是看其列的内容：每一列是否是一个独立的参数。如果每一列都是独立的参数那就是一维数据列表，如果每一列都是同类参数那就是二维数据列表。
+
+**注意** 为了后期更好地创建各种类型的数据透视表，建议用户在数据录入时，采用一维数据列表的形式进行数据录入，**避免采用二维数据列表的形式对数据进行录入**。
+
+缺失值
+
+```{r}
+ggplot2movies::movies %>% is.na() %>% sum()
+```
+
+```{r}
+ggplot2movies::movies %>% dim()
+```
+
+```{r}
+ggplot2movies::movies %>% complete.cases() %>% ggplot2movies::movies[.,] -> x1
+```
+
+```{r}
+ggplot2movies::movies %>%
+  complete.cases() %>% 
+  ggplot2movies::movies[.,] %>% 
+  is.na() %>% 
+  mean()
+
+```
+
+```{r}
+x1 %>% dim()
+```
+
+```{r}
+ggplot2movies::movies %>% tidyr::drop_na() -> x2
+all.equal(x1,x2)
+```
+
+```{r}
+x <- 1:10
+ifelse(x > 5, "Yes","No")
+```
+
+```{r}
+iris %>% 
+  mutate(X = ifelse(Sepal.Length > 6,">6","<=6")) %>% 
+  relocate(X) %>% 
+  as_tibble()
+```
+
+```{r}
+x <- 10
+if(x > 5){
+  print("x大于5")
+}else{
+  print("x小于等于5")
+}
+```
+
+我们常用的控制语句包括 `if…else`、 `ifelse 条件语句`， 以及 `for` 和 `while` 循环语句。其中我们最常见的就是`if…else`，主要用于检查判定。其条件最基本的检查包括等于（ =）、小于（ <）、小于等于（ <=）、大于（ >）、大于等于（ >=） 和不等于（ !=）。 `if…else` 语句对数据的操作运算命令都需要放在{}里面。
+
+需要注意的是：**在else左边的大括号“}”必须与else在同一行**，否则程序无法识别，会导致代码运行错误。另外， R 语言还有一个 `ifelse()`语句，可以向量化 if 语句，从而加速代码的运行.
+
+```
+if (条件){
+执行语句
+} else {
+其他执行语句 }
+```
+
+```
+for (变量 in 向量){
+执行语句
+}
+while (条件){
+执行语句
+```
+
+我们更加需要了解的是**现有函数的输入参数与数据的结构**、**输出参数的数据内容**等， 比如 `plot3D` 包的persp3D()函数和`lattice包`的wireframe()函数都可以绘制相同的三维曲面图，但是persp3D()函数要求输入的数据是向量与矩阵形式，而wireframe()函数要求输入的数据是数据框。
+
+```{r}
+my_square <- function(x,y){
+  square1 = x * x
+  square2 = y * y 
+  return(list(square1 = square1,
+              square2 = square2))
+}
+my_square(2,6) -> x
+x$square1
+x$square2
+```
+
+# R语言绘图基础
+
+在 R 里，主要有两大底层图形系统，一是**基础图形系统**，二是 **grid图形系统**。lattice 包与ggplot2包正是基于 grid 图形系统构建的， 而基础绘图函数由graphics包提供， 它们都有自己独特的语法。
+
+grid图形系统可以很容易地控制图形基础单元，给予编程者创作图形极大的灵活性。grid图形系统还可以产生可编辑的图形组件，这些图形组件可以被复用和重组，并能通过grid.layout()等函数，把图形输出到指定的位置上。但是因为grid包中没有提供生成统计图形及完整绘图的函数，因此很少直接使用 grid 包来分析与展示数据。
+
+`ggplot2包`则基于一种全面的图形语法，提供了一种全新的图形创建方式，这套图形语法把绘图过程归纳为`数据（data）`、`转换（transformation）`、`度量（scale）`、`坐标系（ coordinate）`、`元素（element）`、`指引（guide）`、`显示（display）`等一系列独立的步骤，通过将这些步骤搭配组合，来实现个性化的统计绘图。于是，得益于该图形语法， Hadley Wickham所开发的ggplot2包是如此人性化，不同于R graphics包的基础绘图和先前的lattice包那样参数繁多，而是摈弃了诸多烦琐细节，并以人性化的思维进行高质量作图。在ggplot2 包中，**加号（+）的引入**是革命性的，这个神奇的符号完成了一系列图形语法叠加。
+
+```{r}
+iris %>% 
+  ggplot(aes(x = Sepal.Length,Sepal.Width,col = Species,group = Species)) +
+  geom_point() +
+  geom_smooth() +
+  mytheme
+```
+
+# ggplot2 图形语法
+
+# 学术图标的色彩运用原理
+
+# 图标的基本类型
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
