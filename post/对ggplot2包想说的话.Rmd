@@ -1,0 +1,402 @@
+--- 
+title: "对ggplot2包想说的话"
+# subtitle: "Lecture title"
+author:
+- affiliation: Dongbei University of Finance & Economics
+  name: Studennt. Li Junjie
+date: '`r Sys.Date()`'
+output:
+  bookdown::html_document2:
+    # code_folding: hide
+    highlight: pygments
+    # highlight: zenburn
+    # highlight: haddock
+    theme: darkly
+    # theme: cerulean
+    df_print: paged	
+    number_sections: true
+    keep_md: no
+    keep_tex: no
+    toc: yes
+    toc_depth: 5
+    toc_float:
+      collapsed: no
+      smooth_scroll: yes
+    # css: styles.css
+# bibliography: [book.bib, packages.bib]
+# biblio-style: apalike
+link-citations: yes
+sansfont: Times New Roman
+always_allow_html: yes
+urlcolor: "red"
+description: "This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook."
+abstract: |
+    ggplot2本身就很强大，简简单单几行代码就可以生成漂亮的图片，加上ggplot2系列扩展包和强大的社区，学好ggplot2，大部分的绘图基本不在话下，难在快速找到自己需要的信息和处理加工，画图简单，画好看的图难。本教程主要汇总ggplot2重要但容易被忽略的知识点。
+---
+
+# `r emo::ji("smile")`加载经常用的R包`r emo::ji("smile")`
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      cache = FALSE,
+                      fig.show = "hold",
+                      fig.align = "center",
+                      tidy = FALSE)
+                      # class.source = "bg-warning")
+```
+
+```{r,echo=FALSE}
+library(bubblyr)
+bubblyr::bubbly(theme = "sweet")
+# bubblyr::bubbly(theme = "rladies")
+```
+
+```{js, echo=FALSE}
+$('.title').css('color', 'red')
+$('.title').css('font-family', 'Times New Roman')
+```
+
+```{css, echo=FALSE}
+* {
+    # font-size: 17px !important;
+    font-family: "Times New Roman" !important;
+    # color: rgb(199 237	204)
+}
+::selection {
+   # background: rgb(135 206 255);
+}
+```
+
+```{r,warning=FALSE,message=FALSE}
+library(pacman)
+# 读数据
+p_load(readxl,writexl,data.table,openxlsx,haven,rvest)
+```
+
+```{r,warning=FALSE,message=FALSE}
+# 数据探索
+p_load(tidyverse,DT,skimr,DataExplorer,explore,vtable,stringr,kableExtra,lubridate)
+```
+
+```{r,eval=FALSE,warning=FALSE,message=FALSE}
+# 模型
+p_load(grf,glmnet,caret,tidytext,fpp2,forecast,car,tseries,hdm,tidymodels,broom)
+```
+
+```{r,eval=FALSE,warning=FALSE,message=FALSE}
+# 可视化
+p_load(patchwork,ggrepel,ggcorrplot,gghighlight,ggthemes,shiny)
+```
+
+```{r,eval=TRUE,warning=FALSE,message=FALSE}
+# 其它常用包
+p_load(magrittr,listviewer,devtools,here,janitor,reticulate,jsonlite)
+p_load(tidyquant)
+```
+
+# `r emo::ji("smile")`Number_format函数`r emo::ji("smile")`
+
+```{r}
+ga_claims <- 
+  "GAICLAIMS" %>% 
+  tq_get(get = "economic.data", 
+         from = "1999-01-01") %>% 
+  rename(claims = price) 
+ga_claims
+```
+
+```{r}
+ga_claims %>%
+  mutate(year = year(date),
+         month =  month(date, label = T, abbr  = T)) %>% 
+  group_by(year,month) %>% 
+  filter(n() >= 4) %>% 
+  summarise(avg_claims = mean(claims)) %>% 
+  mutate(
+    avg_claims_labels = scales::number_format(
+      accuracy = 1,
+      scale = 1 / 1000,
+      suffix = "k",
+      big.mark = ","
+    )(avg_claims)) %>% 
+  ggplot(aes(
+    x = month,
+    y = year,
+    fill = avg_claims,
+    label = avg_claims_labels
+  )) +
+  geom_tile(color = "white", size = .8, aes(height = 1)) +
+  mytheme
+
+```
+
+# `r emo::ji("smile")`geom_segment绘制箭头图`r emo::ji("smile")`
+
+```{r}
+df2 <- expand.grid(
+  lineend = c('round', 'butt', 'square'),
+  linejoin = c('round', 'mitre', 'bevel'),
+  stringsAsFactors = FALSE
+)
+df2 <- data.frame(df2, y = 1:9)
+
+df2
+```
+
+```{r}
+ggplot(df2, aes(
+  x = 1,
+  y = y,
+  xend = 2,
+  yend = y,
+  label = paste(lineend, linejoin)
+)) +
+  geom_segment(
+    lineend = df2$lineend,
+    linejoin = df2$linejoin,
+    size = 3,
+    arrow = arrow(length = unit(0.3, "inches"))
+  ) +
+  geom_text(hjust = 'outside', nudge_x = -0.2,family = "Times New Roman") +
+  xlim(0.5, 2) +
+  mytheme
+
+```
+
+# `r emo::ji("smile")`统计变换Stats`r emo::ji("smile")`
+
+## `r emo::ji("flowers")`stat_ecdf`r emo::ji("flowers")`
+
+```{r}
+df <- data.frame(
+  x = c(rnorm(100, 0, 3), rnorm(100, 0, 10)),
+  g = gl(2, 100)
+)
+
+# Don't go to positive/negative infinity
+ggplot(df, aes(x)) + stat_ecdf(geom = "step", pad = FALSE) + mytheme
+```
+
+## `r emo::ji("flowers")`stat_ellipse`r emo::ji("flowers")`
+
+```{r}
+ggplot(faithful, aes(waiting, eruptions)) +
+  geom_point() +
+  stat_ellipse() +
+  mytheme
+```
+
+```{r}
+ggplot(faithful, aes(waiting, eruptions, color = eruptions > 3)) +
+  geom_point() +
+  stat_ellipse() +
+  mytheme
+```
+
+```{r}
+ggplot(faithful, aes(waiting, eruptions, color = eruptions > 3)) +
+  geom_point() +
+  stat_ellipse(type = "norm", linetype = 2) +
+  stat_ellipse(type = "t") +
+  mytheme
+```
+
+```{r}
+ggplot(faithful, aes(waiting, eruptions, fill = eruptions > 3)) +
+  stat_ellipse(geom = "polygon") +
+  mytheme
+```
+
+## `r emo::ji("flowers")`geom_function():如何在一张图上添加分布图`r emo::ji("flowers")`
+
+```{r}
+data.frame(x = rnorm(10000)) %>% 
+  ggplot(aes(x)) +
+  geom_density() +
+  geom_function(fun = dnorm,col = "red") +
+  geom_vline(xintercept = 0,linetype = 2,col = "orange") +
+  mytheme
+```
+
+```{r}
+dnorm(0)
+ggplot() + xlim(-5,5) + geom_function(fun = dnorm) + mytheme
+```
+
+```{r}
+ggplot() + xlim(-5,5) + geom_function(fun = dnorm, args = list(mean = 2,sd = .5)) + mytheme
+```
+
+```{r}
+ggplot() + xlim(-5,5) + stat_function(fun = dnorm,args = list(mean = 2,sd = 0.5),
+                                      geom = "point") +
+  mytheme
+
+ggplot() + xlim(-5,5) + stat_function(fun = dnorm,args = list(mean = 2,sd = 0.5),
+                                      geom = "line") +
+  mytheme
+```
+
+```{r}
+ggplot() +
+  xlim(-5,5) +
+  geom_function(aes(colour = "normal"), fun = dnorm) +
+  geom_function(aes(colour = "t, df = 1"), fun = dt, args = list(df = 1)) +
+  mytheme
+```
+
+```{r}
+ggplot() + xlim(-5,5) + geom_function(fun = function(x) 0.5*exp(-abs(x))) + mytheme
+```
+
+## `r emo::ji("flowers")`stat_summary`r emo::ji("flowers")`
+
+```{r}
+mtcars %>% 
+  ggplot(aes(cyl,mpg)) +
+  geom_point() -> d
+```
+
+```{r}
+d + mytheme
+```
+
+```{r}
+d + stat_summary(fun.data = "mean_cl_boot",col = "red",size = 2) + mytheme
+```
+
+```{r}
+mtcars %>% 
+  ggplot(aes(mpg,cyl)) +
+  geom_point() +
+  stat_summary(fun.data = "mean_cl_boot",col = "red",size = 2) +
+  mytheme
+```
+
+```{r}
+d + stat_summary(fun = "median", colour = "red", size = 2, geom = "point") + mytheme
+```
+
+```{r}
+d + stat_summary(fun = "mean",geom = "point",size = 2,col = "red") + mytheme
+```
+
+```{r}
+d + aes(colour = factor(vs)) + stat_summary(fun = mean, geom="line") + mytheme
+```
+
+# `r emo::ji("smile")`Aesthetics`r emo::ji("smile")`
+
+```{r}
+p <- ggplot(nlme::Oxboys, aes(Occasion, height,fill = Occasion)) + geom_boxplot()
+p + mytheme
+p + geom_line(aes(group = Subject), colour = "blue") + mytheme +
+  geom_point(col = "orange")
+```
+
+The `linetype` aesthetic can be specified with either an `integer` (0-6), a name (0 = `blank`, 1 = `solid`, 2 = `dashed`, 3 = `dotted`, 4 = `dotdash`, 5 = `longdash`, 6 = `twodash`), a mapping to a **discrete variable**, or a string of an even number (up to eight) of hexadecimal digits which give the lengths in consecutive positions in the string. See examples for a hex string demonstration.
+
+```{r}
+df2 <- data.frame(x = 1:5 , y = 1:25, z = 1:25)
+p <- ggplot(df2, aes(x, y,group = factor(z)))
+p + geom_point(aes(shape = z), size = 4) +
+  scale_shape_identity() +
+  mytheme
+```
+
+# `r emo::ji("smile")`Scales`r emo::ji("smile")`
+
+```{r,fig.width=8}
+# Show a list of available shapes
+df_shapes <- data.frame(shape = 0:24)
+ggplot(df_shapes, aes(0, 0, shape = shape)) +
+  geom_point(aes(shape = shape), size = 5, fill = 'red') +
+  scale_shape_identity() +
+  facet_wrap(~shape) +
+  guides(x = guide_axis(angle = 90)) +
+  mytheme
+```
+
+# `r emo::ji("smile")`Guides: axes and legends`r emo::ji("smile")`
+
+```{r}
+df <- expand.grid(X1 = 1:10, X2 = 1:10)
+df$value <- df$X1 * df$X2
+
+p1 <- ggplot(df, aes(X1, X2)) + geom_tile(aes(fill = value))
+p1 + mytheme
+```
+
+```{r}
+p1 + geom_point(aes(size = value)) + mytheme
+```
+
+```{r}
+# title text styles via element_text
+p1 + guides(fill =
+  guide_legend(
+    title.theme = element_text(
+      size = 15,
+      face = "italic",
+      colour = "red",
+      angle = 0
+    )
+  )
+)
+```
+
+# `r emo::ji("smile")`Labels`r emo::ji("smile")`
+
+```{r}
+p1 <- ggplot(mtcars, aes(x = mpg, y = wt)) + geom_point()
+p1 + mytheme
+```
+
+```{r}
+# You can assign different labellers to variables:
+p1 + facet_grid(
+  vs + am ~ gear,
+  labeller = labeller(vs = label_both, am = label_value)
+) + mytheme
+```
+
+```{r}
+# Or whole margins:
+p1 + facet_grid(
+  vs + am ~ gear,
+  labeller = labeller(.rows = label_both, .cols = label_value)
+) + mytheme
+```
+
+```{r}
+rainbow2 <- matrix(hcl(seq(0, 360, length.out = 10), 80, 70), nrow = 1)
+rainbow2
+df <- tibble(x = 1:10, y = 1)
+df
+ggplot(df, aes(x, y)) +
+  annotation_raster(rainbow2, -Inf, Inf, -Inf, Inf) +
+  geom_point(col = "pink",size = 20) +
+  scale_x_continuous(breaks = 1:10) +
+  scale_y_continuous(breaks = seq(0.8,1.2,0.2),limits = c(0.8,1.2),
+                     expand = c(0,0)) +
+  annotate(geom = "text",
+           x = 1:10,
+           y = 1,
+           label = c("会","当","凌","绝","顶","一","览","众" ,"山","小"),
+           col = "red",
+           size = 5) +
+  theme(axis.text = element_blank(),
+        axis.ticks = element_blank()) +
+  labs(x = NULL,
+       y = NULL) 
+
+```
+
+# `r emo::ji("smile")`其他资源`r emo::ji("smile")`
+
+- 笔记
+- OneNote笔记
+- ggplot2官网
+
+
+

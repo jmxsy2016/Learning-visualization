@@ -1,0 +1,205 @@
+--- 
+title: "深入探讨R语言配色：结合ggtheme和ggtech"
+# subtitle: "Lecture title"
+author:
+- affiliation: Dongbei University of Finance & Economics
+  name: Studennt. Li Junjie
+date: '`r Sys.Date()`'
+output:
+  bookdown::html_document2:
+    # code_folding: hide
+    highlight: pygments
+    # highlight: zenburn
+    # highlight: haddock
+    theme: darkly
+    # theme: cerulean
+    df_print: paged	
+    number_sections: true
+    keep_md: no
+    keep_tex: no
+    toc: yes
+    toc_depth: 5
+    toc_float:
+      collapsed: no
+      smooth_scroll: yes
+    # css: styles.css
+# bibliography: [book.bib, packages.bib]
+# biblio-style: apalike
+link-citations: yes
+sansfont: Times New Roman
+always_allow_html: yes
+urlcolor: "red"
+description: "This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook."
+abstract: |
+    如何给图表配色是设计人员的主要内容，对于数据分析人员，重点在于对数据的处理加工，稍微了解一些设计知识即可。如何不像深入了解设计知识，一个好的办法是搜索和精选好的商业图表案例，用取色器取出它们的配色，运用到自己的图表中。本文重点结合ggthemes和ggtech借鉴商业媒体图表的成功配色方案。
+---
+
+# 加载经常用的R包
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      cache = FALSE,
+                      fig.show = "hold",
+                      fig.align = "center",
+                      tidy = FALSE)
+                      # class.source = "bg-warning")
+```
+
+```{r,echo=FALSE}
+library(bubblyr)
+bubblyr::bubbly(theme = "sweet")
+# bubblyr::bubbly(theme = "rladies")
+```
+
+```{js, echo=FALSE}
+$('.title').css('color', 'red')
+$('.title').css('font-family', 'Times New Roman')
+```
+
+```{css, echo=FALSE}
+* {
+    # font-size: 17px !important;
+    font-family: "Times New Roman" !important;
+    # color: rgb(199 237	204)
+}
+::selection {
+   # background: rgb(135 206 255);
+}
+```
+
+```{r,warning=FALSE,message=FALSE}
+library(pacman)
+# 读数据
+p_load(readxl,writexl,data.table,openxlsx,haven,rvest)
+```
+
+```{r,warning=FALSE,message=FALSE}
+# 数据探索
+p_load(tidyverse,DT,skimr,DataExplorer,explore,vtable,stringr,kableExtra,lubridate)
+```
+
+```{r,eval=FALSE,warning=FALSE,message=FALSE}
+# 模型
+p_load(grf,glmnet,caret,tidytext,fpp2,forecast,car,tseries,hdm,tidymodels,broom)
+```
+
+```{r,eval=TRUE,warning=FALSE,message=FALSE}
+# 可视化
+p_load(patchwork,ggrepel,ggcorrplot,gghighlight,ggthemes,shiny)
+```
+
+```{r,eval=TRUE,warning=FALSE,message=FALSE}
+# 其它常用包
+p_load(magrittr,listviewer,devtools,here,janitor,reticulate,jsonlite)
+```
+
+# ggtheme
+
+近年来，R语言开始流行，我也了解了一下R语言里ggplot2的作图，知道了`ggthemes`主题包。它将一些期刊、软件的图表风格进行了整理，做成扩展包，方便地格式化出不同风格的图表.
+
+ggthemes有多种风格的主题，其中最有商务气质的当属 `wsj` 和 `economist` 主题，也就是华尔街日报和经济学人的风格。这一篇帖子，就是要从ggthemes里提取华尔街日报的图表配色方案。
+
+```{r}
+iris %>% 
+  ggplot(aes(x = Sepal.Length,Sepal.Width,col = Species)) +
+  geom_point() +
+  ggthemes::theme_wsj()  -> p
+p
+```
+
+`scale_fill_wsj()`设置序列的填充颜色，有5种参数，分别是 `colors6`、`rgby`、`red_green`、`black_green`、`dem_rep` 五组颜色，显示效果如下。
+
+```{r}
+p+scale_fill_wsj("colors6", "")+theme_wsj()
+```
+
+```{r}
+p+scale_fill_wsj("rgby", "")+theme_wsj()
+```
+
+```{r}
+p+scale_fill_wsj("red_green", "")+theme_wsj()
+```
+
+```{r}
+p+scale_fill_wsj("black_green", "")+theme_wsj()
+```
+
+```{r}
+p+scale_fill_wsj("dem_rep", "")+theme_wsj()
+```
+
+`theme_wsj()` 里面可以设置图表的背景色，有4种参数，分别是 `brown`、`gray`、`green`、`blue`，显示效果如下。序列颜色和背景颜色可以有不同的搭配组合。
+
+```{r}
+p+scale_fill_wsj("colors6", "")+theme_wsj(color="brown")
+```
+
+```{r}
+p+scale_fill_wsj("colors6", "")+theme_wsj(color="gray")
+```
+
+```{r}
+p+scale_fill_wsj("colors6", "")+theme_wsj(color="green")
+```
+
+```{r}
+p+scale_fill_wsj("colors6", "")+theme_wsj(color="blue")
+```
+
+```{r}
+print(ggthemes_data$wsj$palettes)
+```
+
+```{r}
+ggthemes_data$wsj$palettes$rgby
+```
+
+```{r}
+df <- data.frame(x=1:5, y=1:5)
+
+p <- ggplot(df, aes(x=x, y=y, fill=factor(y))) +geom_bar(stat="identity")
+
+p + scale_fill_economist() + theme_economist()
+
+```
+
+```{r}
+p + theme_economist(dkpanel=TRUE) + scale_fill_economist()
+```
+```{r}
+p + scale_fill_economist() + theme_economist_white() 
+```
+
+# ggtech
+
+`ggtech` 也是 `ggplot` 的扩展主题包，它从著名科技公司 `LOGO` 取色做成图表主题
+
+```{r}
+library(ggtech)
+df <- data.frame(x=1:5, y=1:5)
+df %>% ggplot(aes(x,y,fill = factor(x))) +
+  geom_col() +
+  theme_tech(theme="Airbnb") +
+  scale_fill_tech(theme="airbnb") +ggtitle("Airbnb, ExcelPro")
+```
+
+```{r,message=FALSE}
+df <- data.frame(x=1:4, y=1:4)
+df %>% ggplot(aes(x,y,fill = factor(x))) +
+  geom_col() +
+  theme_tech(theme="google") +
+  scale_fill_tech(theme="google") +ggtitle("google, ExcelPro")
+```
+
+```{r,message=FALSE}
+df <- data.frame(x=1:4, y=1:4)
+df %>% ggplot(aes(x,y,fill = factor(x))) +
+  geom_col() +
+  theme_tech(theme="twitter") +
+  scale_fill_tech(theme="twitter") +ggtitle("twitter, ExcelPro")
+```
+
+
+
+
